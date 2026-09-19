@@ -1,5 +1,5 @@
 // Christina Gadson
-// 9/10/2026
+// 9/16/2026
 
 package com.christina.builddemo;
 
@@ -19,6 +19,7 @@ class BuildServerTest {
 
         assertTrue(response.contains("Build Process Demo"));
         assertTrue(response.contains("automated Maven build"));
+        assertTrue(response.contains("Jenkins CI"));
     }
 
     // Tests the content returned by the status page.

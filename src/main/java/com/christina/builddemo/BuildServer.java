@@ -1,5 +1,8 @@
 // Christina Gadson
-// 9/10/2026
+// 9/16/2026
+// BuildProcessDemo
+// Demonstrates a simple Java web server built, tested, and packaged
+// through an automated Maven and Jenkins CI workflow.
 
 package com.christina.builddemo;
 
@@ -17,14 +20,16 @@ public class BuildServer {
     // Returns the webpage content for the requested path.
     static String getResponseBody(String path) {
 
+        // Main page displays information about the automated build process.
         if ("/".equals(path)) {
             return "<html><body>"
                     + "<h1>Build Process Demo</h1>"
                     + "<p>This application was packaged using "
-                    + "an automated Maven build.</p>"
+                    + "an automated Maven build and verified through Jenkins CI.</p>"
                     + "</body></html>";
         }
 
+        // Status page confirms that the server is running.
         if ("/status".equals(path)) {
             return "<html><body>"
                     + "<h1>Status</h1>"
@@ -32,23 +37,25 @@ public class BuildServer {
                     + "</body></html>";
         }
 
+        // Any unsupported path returns a simple 404 page.
         return "<html><body>"
                 + "<h1>404 - Not Found</h1>"
                 + "</body></html>";
     }
 
-    // Returns the HTTP status code for the requested path.
+    // Returns the appropriate HTTP status code for the requested path.
     static int getStatusCode(String path) {
 
         if ("/".equals(path) || "/status".equals(path)) {
             return 200;
         }
 
-        return 404; 
+        return 404;
     }
 
     public static void main(String[] args) throws IOException {
 
+        // Creates the HTTP server on the configured port.
         HttpServer server =
                 HttpServer.create(new InetSocketAddress(PORT), 0);
 
