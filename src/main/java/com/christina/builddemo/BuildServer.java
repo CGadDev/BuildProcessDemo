@@ -1,6 +1,3 @@
-// Christina Gadson
-// 10/09/2026
-
 package com.christina.builddemo;
 
 import java.io.IOException;
@@ -81,9 +78,11 @@ public class BuildServer {
                     .replace("\"", "&quot;")
                     .replace("'", "&#39;");
 
-            // Generate the personalized greeting webpage.
+            // INTENTIONAL FAILURE:
+            // Changed "Hello" to "Hi" to demonstrate how JUnit
+            // detects incorrect application behavior in Jenkins.
             return "<html><body>"
-                    + "<h1>Hello, " + safeName + "!</h1>"
+                    + "<h1>Hi, " + safeName + "!</h1>"
                     + "<p>Welcome to BuildProcessDemo.</p>"
                     + "</body></html>";
         }
