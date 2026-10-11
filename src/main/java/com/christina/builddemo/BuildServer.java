@@ -1,14 +1,12 @@
 // Christina Gadson
-// 9/16/2026
-// BuildProcessDemo
-// Demonstrates a simple Java web server built, tested, and packaged
-// through an automated Maven and Jenkins CI workflow.
+// 10/09/2026
 
 package com.christina.builddemo;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 import com.sun.net.httpserver.HttpServer;
@@ -24,8 +22,9 @@ public class BuildServer {
         if ("/".equals(path)) {
             return "<html><body>"
                     + "<h1>Build Process Demo</h1>"
-                    + "<p>This application was packaged using "
-                    + "an automated Maven build and verified through Jenkins CI.</p>"
+                    + "<p>This application was packaged using an automated Maven build "
+                    + "and verified through Jenkins CI.</p>"
+                    + "<p>This updated version is now running in a Docker container.</p>"
                     + "</body></html>";
         }
 
@@ -43,10 +42,62 @@ public class BuildServer {
                 + "</body></html>";
     }
 
+    // Returns a personalized greeting using a name from the URL.
+    static String getResponseBody(String path, String query) {
+
+        if ("/greet".equals(path)) {
+
+            // Use a default name if none is provided.
+            String name = "Guest";
+
+            // Search the URL query for a name parameter.
+            if (query != null) {
+                for (String parameter : query.split("&")) {
+                    String[] parts = parameter.split("=", 2);
+
+                    if (parts.length == 2 && "name".equals(parts[0])) {
+
+                        try {
+                            String enteredName = URLDecoder.decode(
+                                    parts[1], StandardCharsets.UTF_8).trim();
+
+                            if (!enteredName.isEmpty()) {
+                                name = enteredName;
+                            }
+                        } catch (IllegalArgumentException e) {
+                            // Use the default name for invalid URL encoding.
+                            name = "Guest";
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            // Escape HTML characters in user-provided names.
+            String safeName = name.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\"", "&quot;")
+                    .replace("'", "&#39;");
+
+            // Generate the personalized greeting webpage.
+            return "<html><body>"
+                    + "<h1>Hello, " + safeName + "!</h1>"
+                    + "<p>Welcome to BuildProcessDemo.</p>"
+                    + "</body></html>";
+        }
+
+        // Preserve the existing homepage and status responses.
+        return getResponseBody(path);
+    }
+
     // Returns the appropriate HTTP status code for the requested path.
     static int getStatusCode(String path) {
 
-        if ("/".equals(path) || "/status".equals(path)) {
+        if ("/".equals(path) ||
+                "/status".equals(path) ||
+                "/greet".equals(path)) {
             return 200;
         }
 
@@ -61,14 +112,18 @@ public class BuildServer {
 
         server.createContext("/", exchange -> {
 
+            // Retrieve the requested path and query parameters.
             String path = exchange.getRequestURI().getPath();
+            String query = exchange.getRequestURI().getRawQuery();
 
-            String response = getResponseBody(path);
+            // Generate the response and corresponding status code.
+            String response = getResponseBody(path, query);
             int statusCode = getStatusCode(path);
 
             byte[] responseBytes =
                     response.getBytes(StandardCharsets.UTF_8);
 
+            // Configure the HTTP response content type.
             exchange.getResponseHeaders().set(
                     "Content-Type",
                     "text/html; charset=UTF-8");
