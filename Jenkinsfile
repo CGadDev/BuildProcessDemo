@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -30,22 +29,25 @@ pipeline {
             }
         }
 
-        // Create a Docker image only after the Maven build succeeds.
+        // Build a Docker image only after Maven succeeds.
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t buildprocessdemo:midterm-%BUILD_NUMBER% .'
+
+                // Verify Docker is accessible to Jenkins.
+                bat '"C:\\Users\\Owner\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" version'
+
+                // Build the image using the packaged JAR.
+                bat '"C:\\Users\\Owner\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe" build -t buildprocessdemo:midterm-%BUILD_NUMBER% .'
             }
         }
     }
 
     post {
-        // Publish JUnit results even when tests fail.
         always {
             junit testResults: 'target/surefire-reports/*.xml',
                   allowEmptyResults: false
         }
 
-        // Archive the packaged JAR after a successful pipeline.
         success {
             archiveArtifacts artifacts: 'target/*.jar',
                              fingerprint: true
