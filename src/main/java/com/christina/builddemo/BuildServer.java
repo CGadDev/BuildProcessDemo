@@ -82,7 +82,7 @@ public class BuildServer {
             // Changed "Hello" to "Hi" to demonstrate how JUnit
             // detects incorrect application behavior in Jenkins.
             return "<html><body>"
-                    + "<h1>Hi, " + safeName + "!</h1>"
+                    + "<h1>Hello, " + safeName + "!</h1>"
                     + "<p>Welcome to BuildProcessDemo.</p>"
                     + "</body></html>";
         }
