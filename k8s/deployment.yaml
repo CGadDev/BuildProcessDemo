@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buildprocessdemo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: buildprocessdemo
+  template:
+    metadata:
+      labels:
+        app: buildprocessdemo
+    spec:
+      containers:
+        - name: buildprocessdemo
+          image: buildprocessdemo:midterm-19
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
