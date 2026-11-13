@@ -6,3 +6,22 @@ target/
 
 # Eclipse temporary files
 .metadata/
+
+# Terraform downloaded providers and modules
+terraform/.terraform/
+
+# Terraform state files and backups
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/.terraform.tfstate.lock.info
+
+# Terraform execution plans
+terraform/*.tfplan
+
+# Terraform crash logs
+terraform/crash.log
+terraform/crash.*.log
+
+# Terraform variable files
+terraform/*.tfvars
+terraform/*.tfvars.json
